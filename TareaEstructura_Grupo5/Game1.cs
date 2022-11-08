@@ -34,6 +34,18 @@ namespace TareaEstructura_Grupo5
         //definimos el alto y el ancho de la ppantalla como constantes 
         const int Alto = 650; //  alto de la pantalla
         const int Ancho = 1309; // ancho de la panatalla 
+
+        // variables para los textbox
+   
+        private TextBox _TextBoxNumeros;
+        private Vector2 _PosicionTextBox;
+        private SpriteFont _fuente;
+        private int _longitud;
+        private MouseState _estadoMouse;
+        private KeyboardState _estadoKeyboard;
+        private int _tiempoAccion;
+
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -41,11 +53,17 @@ namespace TareaEstructura_Grupo5
             //llamamos al alto y ancho de la pantalla 
             _graphics.PreferredBackBufferWidth = Ancho;
             _graphics.PreferredBackBufferHeight = Alto;
+            //posicion donde aparecera el textbox
+            _PosicionTextBox = new Vector2(100, 20);
+            _longitud = 10;
+            _tiempoAccion = 10;
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
+
+
             // para el primer boton - isnertar
 
             btn1 = new Button(this);
@@ -81,9 +99,12 @@ namespace TareaEstructura_Grupo5
 
         protected override void LoadContent()
         {
+            _fuente = Content.Load<SpriteFont>("texto");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            //creando el textbox
+            _TextBoxNumeros = new TextBox(CargarTextura("textbox"), new Point(122, 24), new Point(2, 12), _PosicionTextBox, _longitud, true, true, _fuente, String.Empty, 0.9f);
 
-            // TODO: use this.Content to load your game content here
+           
         }
 
         protected override void Update(GameTime gameTime)
@@ -91,6 +112,11 @@ namespace TareaEstructura_Grupo5
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            _estadoKeyboard = EstadoKeyboard.GetState();
+            _estadoMouse = EstadoMouse.GetState();
+            
+            Entrada(gameTime);
+            _TextBoxNumeros.Update();
             // TODO: Add your update logic here
 
             delay += gameTime.ElapsedGameTime.Milliseconds;
@@ -115,8 +141,9 @@ namespace TareaEstructura_Grupo5
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.BlueViolet);
-
-            // TODO: Add your drawing code hre
+            _spriteBatch.Begin(SpriteSortMode.FrontToBack);
+            _TextBoxNumeros.Render(_spriteBatch);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -132,6 +159,92 @@ namespace TareaEstructura_Grupo5
 
                 
             }
+        }
+
+        protected void Entrada(GameTime gameTime)
+        {
+            Keys[] keys = _estadoKeyboard.GetPressedKeys();
+            String value = String.Empty;
+
+            if (_estadoMouse.LeftButton == ButtonState.Pressed)
+            {
+                if (EstadoMouse.NoClick(true))
+                {
+                    ClickIzquierdo();
+                }
+            }
+            if (_estadoKeyboard.IsKeyUp(Keys.Back) && _estadoKeyboard.IsKeyUp(Keys.Delete))
+            {
+                _tiempoAccion = 10;
+            }
+            if (keys.Count() > 0)
+            {
+                if (keys.Count() > 1)
+                {
+                    keys[0] = ExtraerNumero(keys);
+                }
+                if (_estadoKeyboard.IsKeyDown(Keys.Back) || _estadoKeyboard.IsKeyDown(Keys.Delete))
+                {
+                    if (_tiempoAccion == 0)
+                    {
+                        _tiempoAccion = 10;
+                    }
+                    if (_tiempoAccion == 10)
+                    {
+                        if (_TextBoxNumeros.Seleccionado)
+                        {
+                            _TextBoxNumeros.AgregarTexto('\b');
+                        }
+                        _tiempoAccion--;
+                    }
+                    else
+                    {
+                        _tiempoAccion--;
+                    }
+                    return;
+                }
+                if (_TextBoxNumeros.Seleccionado)
+                {
+                    if (((int)keys[0] >= 48 && (int)keys[0] <= 57) || ((int)keys[0] >= 96 && (int)keys[0] <= 105))
+                    {
+                        value = keys[0].ToString().Substring(keys[0].ToString().Length - 1);
+
+                        if (EstadoKeyboard.TeclaNoPrecionada(keys[0]))
+                        {
+                            _TextBoxNumeros.AgregarTexto(value.ToCharArray()[0]);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        private Texture2D CargarTextura(string textureName) // funcion para cargar la textura 
+        {
+            return Content.Load<Texture2D>(textureName);
+        }
+
+        private void ClickIzquierdo()
+        {
+            if (_estadoMouse.X >= _TextBoxNumeros.Posicion.X && _estadoMouse.X <= _TextBoxNumeros.Posicion.X + _TextBoxNumeros.AnchoTextBox)
+            {
+                if (_estadoMouse.Y >= _TextBoxNumeros.Posicion.Y && _estadoMouse.Y <= _TextBoxNumeros.Posicion.Y + _TextBoxNumeros.AltoTextBox)
+                {
+                    _TextBoxNumeros.Seleccionado = true;
+                }
+            }
+        }
+
+        private Keys ExtraerNumero(Keys[] keys)
+        {
+            foreach (Keys key in keys)
+            {
+                if ((int)key >= 48 && (int)key <= 105)
+                {
+                    return key;
+                }
+            }
+            return Keys.None;
         }
     }
 }
