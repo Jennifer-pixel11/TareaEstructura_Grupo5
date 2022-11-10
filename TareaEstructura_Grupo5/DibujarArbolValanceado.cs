@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Threading;
+
 namespace TareaEstructura_Grupo5
 {
     internal class DibujarArbolValanceado
     {
-      /*  public ArbolValanceado Raiz;
+        public ArbolValanceado Raiz;
         public ArbolValanceado aux;
         // Constructor.
         public DibujarArbolValanceado()
@@ -144,6 +146,6 @@ namespace TareaEstructura_Grupo5
                 MessageBox.Show("Arbol AVL Vacío", "Error", MessageBoxButtons.OK);
             else
                 Raiz.buscar(x, Raiz);
-        }*/
+        }
     }
 }

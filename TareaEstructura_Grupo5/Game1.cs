@@ -28,7 +28,8 @@ namespace TareaEstructura_Grupo5
         Button btn1;
         Button btn2;
         Button btn3;
-
+        DibujarArbolValanceado arbolAVL = new DibujarArbolValanceado(null);
+        DibujarArbolValanceado arbolAVL_Letra = new DibujarArbolValanceado(null);
         //
         int delay=0;
         //definimos el alto y el ancho de la ppantalla como constantes 
@@ -112,12 +113,12 @@ namespace TareaEstructura_Grupo5
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _estadoKeyboard = EstadoKeyboard.GetState();
-            _estadoMouse = EstadoMouse.GetState();
+            _estadoKeyboard = EstadoKeyboard.GetState(); // 
+            _estadoMouse = EstadoMouse.GetState(); //
             
-            Entrada(gameTime);
-            _TextBoxNumeros.Update();
-            // TODO: Add your update logic here
+            Entrada(gameTime); 
+            _TextBoxNumeros.Update(); // traemos el update de la clase button en la cual esta la condicion del evento del boton
+            
 
             delay += gameTime.ElapsedGameTime.Milliseconds;
             KeyboardState kbs = Keyboard.GetState();

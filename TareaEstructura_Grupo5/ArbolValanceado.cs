@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
 namespace TareaEstructura_Grupo5
 {
     class ArbolValanceado
     {
-       /* public int valor;
+       public int valor;
         public ArbolValanceado NodoIzquierdo;
         public ArbolValanceado NodoDerecho;
         public ArbolValanceado NodoPadre;
         public int altura;
-        public Rectangle prueba;
+        public System.Drawing.Rectangle prueba;
         private DibujarArbolValanceado arbol;
         public ArbolValanceado()
         {
@@ -50,7 +53,7 @@ namespace TareaEstructura_Grupo5
             }
             else
             {
-                MessageBox.Show("Valor Existente en el Arbol", "Error", MessageBoxButtons.OK);
+               // MessageBox.Show("Valor Existente en el Arbol", "Error", MessageBoxButtons.OK);
             }
 
 
@@ -211,7 +214,7 @@ namespace TareaEstructura_Grupo5
             }
             else
             {
-                MessageBox.Show("Nodo inexistente en el arbol", "Error", MessageBoxButtons.OK);
+               // MessageBox.Show("Nodo inexistente en el arbol", "Error", MessageBoxButtons.OK);
             }
             return nodoP;
         }
@@ -273,11 +276,11 @@ namespace TareaEstructura_Grupo5
                     }
                 }
             }
-            else
-                MessageBox.Show("Valor no encontrado", "Error", MessageBoxButtons.OK);
-        }*/
+            /*else
+               MessageBox.Show("Valor no encontrado", "Error", MessageBoxButtons.OK);*/
+        }
         /*++++++++++++FUNCIONES PARA DIBUJAR EL ÁRBOL +++++++++++++*/
-       /* private const int Radio = 30;
+        private const int Radio = 30;
         private const int DistanciaH = 40;
         private const int DistanciaV = 10;
         private int CoordenadaX;
@@ -351,7 +354,7 @@ namespace TareaEstructura_Grupo5
         dato, Brush encuentro)
         {
             //Dibuja el contorno del nodo.
-            Rectangle rect = new Rectangle(
+            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(
             (int)(CoordenadaX - Radio / 2),
             (int)(CoordenadaY - Radio / 2),
             Radio, Radio);
@@ -384,10 +387,10 @@ namespace TareaEstructura_Grupo5
         public void colorear(Graphics grafo, Font fuente, Brush Relleno, Brush RellenoFuente, Pen Lapiz)
         {
             //Dibuja el contorno del nodo.
-            Rectangle rect = new Rectangle(
+            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(
             (int)(CoordenadaX - Radio / 2),
             (int)(CoordenadaY - Radio / 2), Radio, Radio);
-            prueba = new Rectangle((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2),
+            prueba = new System.Drawing.Rectangle((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2),
             Radio, Radio);
             //Dibuja el nombre.
             StringFormat formato = new StringFormat();
@@ -396,6 +399,6 @@ namespace TareaEstructura_Grupo5
             grafo.DrawEllipse(Lapiz, rect);
             grafo.FillEllipse(Brushes.PaleVioletRed, rect);
             grafo.DrawString(valor.ToString(), fuente, Brushes.Black, CoordenadaX, CoordenadaY, formato);
-        }*/
+        }
     }
 }
