@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Threading;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace TareaEstructura_Grupo5
 {
+
     internal class DibujarArbolValanceado
     {
         public ArbolValanceado Raiz;
@@ -38,9 +44,9 @@ namespace TareaEstructura_Grupo5
             else
                 Raiz.Eliminar(dato, ref Raiz);
         }
-        private const int Radio = 30;
-        private const int DistanciaH = 40;
-        private const int DistanciaV = 10;
+        private const int Radio = 35;
+        private const int DistanciaH = 140;
+        private const int DistanciaV = 70;
         private int CoordenadaX;
         private int CoordenadaY;
         public void PosicionNodoreocrrido(ref int xmin, ref int ymin)
@@ -49,91 +55,32 @@ namespace TareaEstructura_Grupo5
             CoordenadaX = (int)(xmin + Radio / 2);
             xmin += Radio;
         }
-        public void colorear(Graphics grafo, Font fuente, Brush Relleno, Brush RellenoFuente, Pen Lapiz, ArbolValanceado Raiz,
-        bool post, bool inor, bool preor)
-        {
-            Brush entorno = Brushes.Red;
-            if (inor == true)
-            {
-                if (Raiz != null)
-                {
-                    colorear(grafo, fuente, Brushes.Blue, RellenoFuente, Lapiz, Raiz.NodoIzquierdo, post, inor,
-                    preor);
-                    Raiz.colorear(grafo, fuente, entorno, RellenoFuente, Lapiz);
-                    Thread.Sleep(500);
-                    Raiz.colorear(grafo, fuente, Relleno, RellenoFuente, Lapiz);
-                    colorear(grafo, fuente, Relleno, RellenoFuente, Lapiz, Raiz.NodoDerecho, post, inor, preor);
-                }
-            }
-            else if (preor == true)
-            {
-                if (Raiz != null)
-                {
-                    Raiz.colorear(grafo, fuente, Brushes.Yellow, Brushes.Blue, Pens.Black);
-                    Thread.Sleep(500);
-                    Raiz.colorear(grafo, fuente, Brushes.White, Brushes.Black, Pens.Black);
-                    colorear(grafo, fuente, Brushes.Blue, RellenoFuente, Lapiz, Raiz.NodoIzquierdo, post, inor,
-                    preor);
-                    colorear(grafo, fuente, Relleno, RellenoFuente, Lapiz, Raiz.NodoDerecho, post, inor, preor);
-                }
-            }
-            else if (post == true)
-            {
-                if (Raiz != null)
-                {
-                    colorear(grafo, fuente, Relleno, RellenoFuente, Lapiz, Raiz.NodoIzquierdo, post, inor, preor);
-                    colorear(grafo, fuente, Relleno, RellenoFuente, Lapiz, Raiz.NodoDerecho, post, inor, preor);
-                    Raiz.colorear(grafo, fuente, entorno, RellenoFuente, Lapiz);
-                    Thread.Sleep(500);
-                    Raiz.colorear(grafo, fuente, entorno, RellenoFuente, Lapiz);
-                }
-            }
-        }
-        public void colorearB(Graphics grafo, Font fuente, Brush Relleno, Brush RellenoFuente, Pen Lapiz, ArbolValanceado Raiz,
-        int busqueda)
-        {
-            Brush entorno = Brushes.Red;
-            if (Raiz != null)
-            {
-                Raiz.colorear(grafo, fuente, entorno, RellenoFuente, Lapiz);
-                if (busqueda < Raiz.valor)
-                {
-                    Thread.Sleep(500);
-                    Raiz.colorear(grafo, fuente, entorno, Brushes.Blue, Lapiz);
-                    colorearB(grafo, fuente, Relleno, RellenoFuente, Lapiz, Raiz.NodoIzquierdo, busqueda);
 
-                }
-                else
-                {
-                    if (busqueda > Raiz.valor)
-                    {
-                        Thread.Sleep(500);
-                        Raiz.colorear(grafo, fuente, entorno, RellenoFuente, Lapiz);
-                        colorearB(grafo, fuente, Relleno, RellenoFuente, Lapiz, Raiz.NodoDerecho, busqueda);
-                    }
-                    else
-                    {
-                        Raiz.colorear(grafo, fuente, entorno, RellenoFuente, Lapiz);
-                        Thread.Sleep(500);
-                    }
-                }
-            }
-        }
         //Dibuja el árbol
-        public void DibujarArbol(Graphics grafo, Font fuente, Brush Relleno, Brush RellenoFuente, Pen Lapiz, int
-        dato, Brush encuentro)
+        public void DibujarArbol(GraphicsDeviceManager gra, SpriteBatch sprite, int dato, SpriteFont font)
         {
-            int x = 100;
-            int y = 75;
+            int x = 300;
+            int y = 100;
             if (Raiz == null) return;
             //Posicion de todos los Nodos.
             Raiz.PosicionNodo(ref x, y);
             //Dibuja los Enlaces entre nodos.
-            Raiz.DibujarRamas(grafo, Lapiz);
+            Raiz.DibujarRamas(gra, sprite);
             //Dibuja todos los Nodos.
-            Raiz.DibujarNodo(grafo, fuente, Relleno, RellenoFuente, Lapiz, dato, encuentro);
+            Raiz.DibujarNodo(gra, sprite, dato, font);
+            //Raiz.colorearRecorrido(gra, sprite, dato, font, true, true, true);
+
         }
-        public int x1 = 100;
+
+        
+           
+        
+
+
+
+
+
+        public int x1 = 250;
         public int y2 = 75;
         public void restablecer_valores()
         {
@@ -142,10 +89,18 @@ namespace TareaEstructura_Grupo5
         }
         public void buscar(int x)
         {
+            //int nada = 0;
             if (Raiz == null)
+                //nada = 3;
                 MessageBox.Show("Arbol AVL Vacío", "Error", MessageBoxButtons.OK);
             else
                 Raiz.buscar(x, Raiz);
+
         }
+
+        
+
     }
 }
+
+

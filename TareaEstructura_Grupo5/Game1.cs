@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 
 namespace TareaEstructura_Grupo5
@@ -18,7 +20,10 @@ namespace TareaEstructura_Grupo5
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
+        private bool opcion1 = false;
+        private bool opcion2 = false;
+        private bool opcion3 = false;
+        string datoingresar = "";
         //lista de botones
         List<Button> listButtons = new List<Button>();
 
@@ -30,6 +35,17 @@ namespace TareaEstructura_Grupo5
         Button btn3;
         DibujarArbolValanceado arbolAVL = new DibujarArbolValanceado(null);
         DibujarArbolValanceado arbolAVL_Letra = new DibujarArbolValanceado(null);
+        //Graphics g;
+        int pintaR = 0;
+
+        int cont = 0;
+        char dato;
+        int datb = 0;
+        int cont2 = 0;
+        Graphics g;
+        //int pintaR = 0;
+
+        
         //
         int delay=0;
         //definimos el alto y el ancho de la ppantalla como constantes 
@@ -37,16 +53,16 @@ namespace TareaEstructura_Grupo5
         const int Ancho = 1309; // ancho de la panatalla 
 
         // variables para los textbox
-   
+      //  private TextBox textoActual;
         private TextBox _TextBoxNumeros;
         private Vector2 _PosicionTextBox;
-        private SpriteFont _fuente;
+        private SpriteFont _fuente,fuentenodo;
         private int _longitud;
         private MouseState _estadoMouse;
         private KeyboardState _estadoKeyboard;
         private int _tiempoAccion;
 
-
+       
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -59,6 +75,10 @@ namespace TareaEstructura_Grupo5
             _longitud = 10;
             _tiempoAccion = 10;
             IsMouseVisible = true;
+            //_TextBoxNumeros.TextoActual(dato);
+        
+
+
         }
 
         protected override void Initialize()
@@ -66,19 +86,26 @@ namespace TareaEstructura_Grupo5
 
 
             // para el primer boton - isnertar
-
+           
             btn1 = new Button(this);
             btn1.Texture =  Content.Load<Texture2D>("INSER");
-            btn1.SourceRectangle =  new Rectangle (0,0,197, btn1.Texture.Height);
+            btn1.SourceRectangle =  new Microsoft.Xna.Framework.Rectangle(0,0,197, btn1.Texture.Height);
             btn1.Position = new Vector2 (462 - btn1.Texture.Width/4,20);
 
-            this.Components.Add(btn1);
 
+
+            // dato = Convert.ToInt16(_TextBoxNumeros.TextoActual);
+           // Font fuente = new Font("Arial", 10);
+           //
+           // btn1.Click += btn => arbolAVL.Insertar(dato);
+           // cont++;
+            this.Components.Add(btn1);
+        
             // para el segundo boton - buscar
 
             btn2 = new Button(this);
             btn2.Texture = Content.Load<Texture2D>("BUSC");
-            btn2.SourceRectangle = new Rectangle(0, 0, 197, btn2.Texture.Height);
+            btn2.SourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, 0, 197, btn2.Texture.Height);
             btn2.Position = new Vector2(693 - btn2.Texture.Width / 4, 20);
 
             this.Components.Add(btn2);
@@ -87,7 +114,7 @@ namespace TareaEstructura_Grupo5
 
             btn3 = new Button(this);
             btn3.Texture = Content.Load<Texture2D>("EXPOR");
-            btn3.SourceRectangle = new Rectangle(0, 0, 197, btn3.Texture.Height);
+            btn3.SourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, 0, 197, btn3.Texture.Height);
             btn3.Position = new Vector2(924 - btn3.Texture.Width / 4, 20);
 
             this.Components.Add(btn3);
@@ -100,10 +127,11 @@ namespace TareaEstructura_Grupo5
 
         protected override void LoadContent()
         {
+            fuentenodo = Content.Load<SpriteFont>("texto");
             _fuente = Content.Load<SpriteFont>("texto");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             //creando el textbox
-            _TextBoxNumeros = new TextBox(CargarTextura("textbox"), new Point(122, 24), new Point(2, 12), _PosicionTextBox, _longitud, true, true, _fuente, String.Empty, 0.9f);
+            _TextBoxNumeros = new TextBox(CargarTextura("textbox"), new Microsoft.Xna.Framework.Point(122, 24), new Microsoft.Xna.Framework.Point(2, 12), _PosicionTextBox, _longitud, true, true, _fuente, String.Empty, 0.9f);
 
            
         }
@@ -136,18 +164,106 @@ namespace TareaEstructura_Grupo5
                 delay = 0;
             }
 
+            //mas eventos de clic en opcion1 = insertar
+            if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 368 && _estadoMouse.X <= 550) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60))
+            {
+
+                opcion1 = true;
+               
+
+            }
+
+            //mas eventos de clic en opcion2 =  buscar
+            if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 599 && _estadoMouse.X <= 791) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60))
+            {
+                
+                opcion2 = true;
+
+
+            }
+
+            //mas eventos de clic en opcion1 = insertar
+            if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 828 && _estadoMouse.X <= 1022) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60))
+            {
+                
+                opcion3 = true;
+
+
+            }
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.BlueViolet);
-            _spriteBatch.Begin(SpriteSortMode.FrontToBack);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.BlueViolet);
+            //_spriteBatch.Begin(SpriteSortMode.FrontToBack);//esto hacia que se borraran los nodos
+            _spriteBatch.Begin();
             _TextBoxNumeros.Render(_spriteBatch);
+
+
+           
+
+           // _spriteBatch.DrawString(_fuente, _estadoMouse.Y.ToString(), new Vector2(50, 50), Microsoft.Xna.Framework.Color.Black);
+         
+
+            
+            if(opcion1)
+            {
+
+                arbolAVL.Insertar(Convert.ToInt32(datoingresar));
+               
+                cont++;
+
+               
+
+                opcion1 = false;
+            }
+            if (opcion2)
+            {
+                arbolAVL.buscar(Convert.ToInt32(datoingresar));
+
+                cont++;
+
+
+
+                opcion2 = false;
+            }
+
+            arbolAVL.DibujarArbol(_graphics, _spriteBatch, 3, fuentenodo);
+
+            //368 y 550 x en insertar
+            //25-60 y en insertar
+
+            //Buscar en x =  599,791 - y = 22,60
+            //exportar en x = 828,1022 - y = 22,60
             _spriteBatch.End();
 
             base.Draw(gameTime);
         }
+
+        /*public void Dibujo()
+        {
+            Graphics g;
+            //_spriteBatch.Clear(this.BackColor);
+            en.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+            en.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g = en;
+            Font fuente = new Font("Arial", 10);
+            arbolAVL.DibujarArbol(g, fuente,
+            Brushes.White, Brushes.Black, Pens.White, dato, Brushes.Black);
+            datb = 0;
+            if (pintaR == 1)
+            {
+                // arbolAVL.colorear(g, this.Font, Brushes.Black, Brushes.Yellow, Pens.Blue, arbolAVL.Raiz, post.Checked,ino.Checked, pre.Checked);
+                pintaR = 0;
+            }
+            if (pintaR == 2)
+            {
+                arbolAVL.colorearB(g, fuente, Brushes.White, Brushes.Red, Pens.White, arbolAVL.Raiz, dato);
+                pintaR = 0;
+            }
+        }*/
 
         private void changeButton() // para cambiar los btones
         {
@@ -166,6 +282,9 @@ namespace TareaEstructura_Grupo5
         {
             Keys[] keys = _estadoKeyboard.GetPressedKeys();
             String value = String.Empty;
+
+
+
 
             if (_estadoMouse.LeftButton == ButtonState.Pressed)
             {
@@ -209,13 +328,19 @@ namespace TareaEstructura_Grupo5
                     if (((int)keys[0] >= 48 && (int)keys[0] <= 57) || ((int)keys[0] >= 96 && (int)keys[0] <= 105))
                     {
                         value = keys[0].ToString().Substring(keys[0].ToString().Length - 1);
-
+                       
                         if (EstadoKeyboard.TeclaNoPrecionada(keys[0]))
                         {
                             _TextBoxNumeros.AgregarTexto(value.ToCharArray()[0]);
                         }
                     }
                 }
+
+                if (_TextBoxNumeros.Seleccionado)
+                {
+                    _TextBoxNumeros.AgregarTexto(dato);
+                }
+                datoingresar = value;  
 
             }
         }

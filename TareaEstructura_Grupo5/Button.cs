@@ -13,6 +13,10 @@ namespace TareaEstructura_Grupo5
 {
     public class Button : DrawableGameComponent
     {
+        int cont = 0;
+        int dato = 0;
+        int datb = 0;
+        int cont2 = 0;
         bool _isSelected = false;
         public event Action<Button> Click;
 
@@ -71,5 +75,6 @@ namespace TareaEstructura_Grupo5
             SpriteBatch.End();
             base.Draw(gameTime);
         }
+        
     }
 }

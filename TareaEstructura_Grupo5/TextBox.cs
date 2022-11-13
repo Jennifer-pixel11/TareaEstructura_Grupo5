@@ -12,8 +12,10 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TareaEstructura_Grupo5
 {
-    public  class TextBox
+    
+    public  class TextBox 
     {
+        
         public string TextoActual { get; set; }
         public Vector2 PosiciónTextoActual { get; set; }
         public Vector2 PosicionCursor { get; set; }
@@ -32,6 +34,14 @@ namespace TareaEstructura_Grupo5
 
         private Point _dimensionesCursor;
         private SpriteFont _fuente;
+        public int dato = 0;
+
+
+        
+
+
+
+
 
         public TextBox(Texture2D textura, Point dimencion, Point dimensionesCursor, Vector2 posicion, int longitud, bool numeros, bool visible, SpriteFont fuente, string texto, float capa)
         {
@@ -100,12 +110,15 @@ namespace TareaEstructura_Grupo5
             }
         }
 
+        
         public void Render(SpriteBatch spriteBatch)
         {
             if (Visible)
             {
                 spriteBatch.Draw(_textura, Posicion, Color.White);//Dibujar la imagen de fondo
                 spriteBatch.DrawString(_fuente, TextoActual, PosiciónTextoActual, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.None, Capa);//Dibujar el texto actual
+                
+                //
 
             }
         }

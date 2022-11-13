@@ -1,30 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using System.Windows.Forms;
+using System.Threading;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace TareaEstructura_Grupo5
 {
     class ArbolValanceado
     {
-       public int valor;
+        public int valor;
         public ArbolValanceado NodoIzquierdo;
         public ArbolValanceado NodoDerecho;
         public ArbolValanceado NodoPadre;
         public int altura;
-        public System.Drawing.Rectangle prueba;
-        private DibujarArbolValanceado arbol;
+        public Rectangle prueba;
+        private ArbolValanceado arbol;
+        private const int Radio = 35;
+        private const int DistanciaH = 140;
+        private const int DistanciaV = 70;
+        private int CoordenadaX;
+        private int CoordenadaY;
         public ArbolValanceado()
         {
 
         }
-        public DibujarArbolValanceado Arbol
+        public ArbolValanceado Arbol
 
         {
             get { return arbol; }
@@ -53,7 +61,7 @@ namespace TareaEstructura_Grupo5
             }
             else
             {
-               // MessageBox.Show("Valor Existente en el Arbol", "Error", MessageBoxButtons.OK);
+                //MessageBox.Show("Valor Existente en el Arbol", "Error", MessageBoxButtons.OK);
             }
 
 
@@ -106,6 +114,10 @@ namespace TareaEstructura_Grupo5
                     {
                         //Posicionado sobre el elemento a eliminar
                         ArbolValanceado NodoEliminar = Raiz;
+
+
+
+
                         if (NodoEliminar.NodoDerecho == null)
                         {
                             Raiz = NodoEliminar.NodoIzquierdo;
@@ -214,7 +226,7 @@ namespace TareaEstructura_Grupo5
             }
             else
             {
-               // MessageBox.Show("Nodo inexistente en el arbol", "Error", MessageBoxButtons.OK);
+                //MessageBox.Show("Nodo inexistente en el arbol", "Error", MessageBoxButtons.OK);
             }
             return nodoP;
         }
@@ -267,24 +279,24 @@ namespace TareaEstructura_Grupo5
                 if (valorBuscar < Raiz.valor)
                 {
                     buscar(valorBuscar, Raiz.NodoIzquierdo);
+                    MessageBox.Show("Nodo: " + valorBuscar + " encontrado en la posición X: " + CoordenadaX + ", Y: " + CoordenadaY, "INFORMACIÓN NODOS", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // MessageBox.Show("Nodo encontrado en la posición X: " + valor.CoordenadaX + ", Y: " + valorBuscar.CoordenadaY, "Error", MessageBoxButtons.OK);
+                    //    encontrado(p);
                 }
                 else
                 {
                     if (valorBuscar > Raiz.valor)
                     {
                         buscar(valorBuscar, Raiz.NodoDerecho);
+                        MessageBox.Show("Nodo: " + valorBuscar + " encontrado en la posición X: " + CoordenadaX + ", Y: " + CoordenadaY, "INFORMACIÓN NODOS", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
-            /*else
-               MessageBox.Show("Valor no encontrado", "Error", MessageBoxButtons.OK);*/
+            ///else
+               // MessageBox.Show("Valor no encontrado", "Error", MessageBoxButtons.OK);
         }
         /*++++++++++++FUNCIONES PARA DIBUJAR EL ÁRBOL +++++++++++++*/
-        private const int Radio = 30;
-        private const int DistanciaH = 40;
-        private const int DistanciaV = 10;
-        private int CoordenadaX;
-        private int CoordenadaY;
+
         //Encuentra la posición en donde debe crearse el nodo.
         public void PosicionNodo(ref int xmin, int ymin)
         {
@@ -335,70 +347,82 @@ namespace TareaEstructura_Grupo5
             }
         }
         // Dibuja las ramas de los nodos izquierdo y derecho
-        public void DibujarRamas(Graphics grafo, Pen Lapiz)
+        public void DibujarRamas(GraphicsDeviceManager grafo, SpriteBatch sprite)
         {
             if (NodoIzquierdo != null)
             {
-                grafo.DrawLine(Lapiz, CoordenadaX, CoordenadaY, NodoIzquierdo.CoordenadaX,
-                NodoIzquierdo.CoordenadaY);
-                NodoIzquierdo.DibujarRamas(grafo, Lapiz);
+
+                //arco
+                MonoGame.Primitives2D.DrawLine(sprite, new Vector2(CoordenadaX, CoordenadaY), new Vector2(NodoIzquierdo.CoordenadaX, NodoIzquierdo.CoordenadaY), Color.Black);
+
+
+                // grafo.DrawLine(Lapiz, CoordenadaX, CoordenadaY, NodoIzquierdo.CoordenadaX,
+                // NodoIzquierdo.CoordenadaY);
+                NodoIzquierdo.DibujarRamas(grafo, sprite);
             }
             if (NodoDerecho != null)
-            {
-                grafo.DrawLine(Lapiz, CoordenadaX, CoordenadaY, NodoDerecho.CoordenadaX, NodoDerecho.CoordenadaY);
-                NodoDerecho.DibujarRamas(grafo, Lapiz);
+            {   //arco
+                MonoGame.Primitives2D.DrawLine(sprite, new Vector2(CoordenadaX, CoordenadaY), new Vector2(NodoDerecho.CoordenadaX, NodoDerecho.CoordenadaY), Color.Black);
+                // grafo.DrawLine(Lapiz, CoordenadaX, CoordenadaY, NodoDerecho.CoordenadaX, NodoDerecho.CoordenadaY);
+                NodoDerecho.DibujarRamas(grafo, sprite);
             }
         }
         //Dibuja el nodo en la posición especificada.
-        public void DibujarNodo(Graphics grafo, Font fuente, Brush Relleno, Brush RellenoFuente, Pen Lapiz, int
-        dato, Brush encuentro)
+
+        //Dibuja el nodo en la posición especificada.
+
+
+
+        public void DibujarNodo(GraphicsDeviceManager grafo, SpriteBatch sprite, int dato, SpriteFont font)
         {
             //Dibuja el contorno del nodo.
-            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(
+            Rectangle rect = new Rectangle(
             (int)(CoordenadaX - Radio / 2),
             (int)(CoordenadaY - Radio / 2),
             Radio, Radio);
             if (valor == dato)
             {
-                grafo.FillEllipse(encuentro, rect);
+
+                MonoGame.Primitives2D.DrawCircle(sprite, new Vector2((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2)), Radio + 2, 52, Color.Red);
+
+                for (int i = 0; i < 50; i++)
+                {
+
+                    MonoGame.Primitives2D.DrawCircle(sprite, new Vector2((int)((CoordenadaX) - Radio / 2), (int)((CoordenadaY) - Radio / 2)), Radio - i, 52, Color.White);
+                }
+
+                //grafo.FillEllipse(encuentro, rect);
+
             }
             else
             {
-                grafo.FillEllipse(encuentro, rect);
-                grafo.FillEllipse(Relleno, rect);
+                MonoGame.Primitives2D.DrawCircle(sprite, new Vector2((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2)), Radio + 2, 52, Color.Red);
+
+                for (int i = 0; i < 50; i++)
+                {
+                    MonoGame.Primitives2D.DrawCircle(sprite, new Vector2((int)((CoordenadaX) - Radio / 2), (int)((CoordenadaY) - Radio / 2)), Radio - i, 52, Color.White);
+                }
+
             }
-            grafo.DrawEllipse(Lapiz, rect);
-            //Dibuja el valor del nodo.
-            StringFormat formato = new StringFormat();
-            formato.Alignment = StringAlignment.Center;
-            formato.LineAlignment = StringAlignment.Center;
-            grafo.DrawString(valor.ToString(), fuente, Brushes.Black, CoordenadaX, CoordenadaY, formato);
+            //letra
+            sprite.DrawString(font, valor.ToString(), new Vector2((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2)), Color.Black);
             //Dibuja los nodos hijos derecho e izquierdo.
             if (NodoIzquierdo != null)
             {
-                NodoIzquierdo.DibujarNodo(grafo, fuente, Brushes.YellowGreen, RellenoFuente, Lapiz, dato,
-                encuentro);
+                NodoIzquierdo.DibujarNodo(grafo, sprite, dato, font);
+
             }
             if (NodoDerecho != null)
             {
-                NodoDerecho.DibujarNodo(grafo, fuente, Brushes.Yellow, RellenoFuente, Lapiz, dato, encuentro);
+                NodoDerecho.DibujarNodo(grafo, sprite, dato, font);
+
             }
+
+
+
         }
-        public void colorear(Graphics grafo, Font fuente, Brush Relleno, Brush RellenoFuente, Pen Lapiz)
-        {
-            //Dibuja el contorno del nodo.
-            System.Drawing.Rectangle rect = new System.Drawing.Rectangle(
-            (int)(CoordenadaX - Radio / 2),
-            (int)(CoordenadaY - Radio / 2), Radio, Radio);
-            prueba = new System.Drawing.Rectangle((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2),
-            Radio, Radio);
-            //Dibuja el nombre.
-            StringFormat formato = new StringFormat();
-            formato.Alignment = StringAlignment.Center;
-            formato.LineAlignment = StringAlignment.Center;
-            grafo.DrawEllipse(Lapiz, rect);
-            grafo.FillEllipse(Brushes.PaleVioletRed, rect);
-            grafo.DrawString(valor.ToString(), fuente, Brushes.Black, CoordenadaX, CoordenadaY, formato);
-        }
+
+        
+
     }
 }

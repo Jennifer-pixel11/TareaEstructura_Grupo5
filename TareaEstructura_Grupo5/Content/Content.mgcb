@@ -49,6 +49,13 @@
 /processorParam:TextureFormat=Color
 /build:INSER.png
 
+#begin nodo.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:nodo.spritefont
+
 #begin textbox.png
 /importer:TextureImporter
 /processor:TextureProcessor
