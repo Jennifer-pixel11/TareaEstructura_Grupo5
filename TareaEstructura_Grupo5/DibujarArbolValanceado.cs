@@ -68,15 +68,28 @@ namespace TareaEstructura_Grupo5
             Raiz.DibujarRamas(gra, sprite);
             //Dibuja todos los Nodos.
             Raiz.DibujarNodo(gra, sprite, dato, font);
-            //Raiz.colorearRecorrido(gra, sprite, dato, font, true, true, true);
+           
+          //  Raiz.ImprimirPre(gra, sprite, Raiz, font);
+           // Raiz.ImprimirPre(sprite, Raiz, font);
+
+
 
         }
-
-        
-           
-        
+       
 
 
+
+
+        /*public void ImprimirPre(ArbolValanceado Raiz)
+        {
+            if (Raiz != null)
+            {
+                //Console.Write(Raiz.info + " ");
+                ImprimirPre(Raiz.NodoIzquierdo);
+                ImprimirPre(Raiz.NodoDerecho);
+                //DibujarArbol(ImprimirPre);
+            }
+        }*/
 
 
 
@@ -98,7 +111,46 @@ namespace TareaEstructura_Grupo5
 
         }
 
-        
+        public void colorear(GraphicsDeviceManager gra, SpriteBatch sprite,  SpriteFont font, ArbolValanceado Raiz, bool post, bool inor, bool preor)
+        {
+            //Brush entorno = Brushes.Red;
+            if (inor == true)
+            {
+                if (Raiz != null)
+                {
+                    colorear(gra, sprite,  font, Raiz.NodoIzquierdo, post, inor, preor);
+                    Raiz.colorear(gra,sprite, font);
+                    Thread.Sleep(10);
+                    // pausar la ejecución 1000 milisegundos
+                    Raiz.colorear(gra, sprite, font);
+                    colorear(gra, sprite, font, Raiz.NodoDerecho, post, inor, preor);
+                }
+            }
+            else
+            if (preor == true)
+            {
+                if (Raiz != null)
+                {
+                    Raiz.colorear(gra, sprite, font);
+                    Thread.Sleep(1000);
+                    // pausar la ejecución 1000 milisegundos
+                    Raiz.colorear(gra, sprite, font);
+                    colorear(gra, sprite, font, Raiz.NodoIzquierdo, post, inor, preor);
+                    colorear(gra, sprite,  font, Raiz.NodoDerecho, post, inor, preor);
+                }
+            }
+            else if (post == true)
+            {
+                if (Raiz != null)
+                {
+                    colorear(gra, sprite,  font, Raiz.NodoIzquierdo, post, inor, preor);
+                    colorear(gra, sprite,  font, Raiz.NodoDerecho, post, inor, preor);
+                    Raiz.colorear(gra, sprite, font);
+                    Thread.Sleep(1000); // pausar la ejecución 1000 milisegundos
+                    Raiz.colorear(gra, sprite, font);
+                }
+            }
+        }
 
     }
 }

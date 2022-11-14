@@ -347,6 +347,55 @@ namespace TareaEstructura_Grupo5
             }
         }
         // Dibuja las ramas de los nodos izquierdo y derecho
+
+        public void PosicionNodoreocrrido(ref int xmin, int ymin)
+        {
+            int aux1, aux2;
+            CoordenadaY = (int)(ymin + Radio / 2);
+            //obtiene la posición del Sub-Árbol izquierdo.
+            if (NodoIzquierdo != null)
+            {
+                NodoIzquierdo.PosicionNodoreocrrido(ref xmin, ymin + Radio + DistanciaV);
+            }
+            if ((NodoIzquierdo != null) && (NodoDerecho != null))
+            {
+                xmin += DistanciaH;
+            }
+            //Si existe el nodo derecho e izquierdo deja un espacio entre ellos.
+            if (NodoDerecho != null)
+            {
+                NodoDerecho.PosicionNodoreocrrido(ref xmin, ymin + Radio + DistanciaV);
+            }
+            // Posicion de nodos dercho e izquierdo.
+            if (NodoIzquierdo != null)
+            {
+                if (NodoDerecho != null)
+                {
+                    //centro entre los nodos.
+                    CoordenadaX = (int)((NodoIzquierdo.CoordenadaX + NodoDerecho.CoordenadaX) / 2);
+                }
+                else
+                {
+                    // no hay nodo derecho. centrar al nodo izquierdo.
+                    aux1 = NodoIzquierdo.CoordenadaX;
+                    NodoIzquierdo.CoordenadaX = CoordenadaX - 40;
+                    CoordenadaX = aux1;
+                }
+            }
+            else if (NodoDerecho != null)
+            {
+                aux2 = NodoDerecho.CoordenadaX;
+                //no hay nodo izquierdo.centrar al nodo derecho.
+                NodoDerecho.CoordenadaX = CoordenadaX + 40;
+                CoordenadaX = aux2;
+            }
+            else
+            {
+                // Nodo hoja
+                CoordenadaX = (int)(xmin + Radio / 2);
+                xmin += Radio;
+            }
+        }
         public void DibujarRamas(GraphicsDeviceManager grafo, SpriteBatch sprite)
         {
             if (NodoIzquierdo != null)
@@ -422,7 +471,53 @@ namespace TareaEstructura_Grupo5
 
         }
 
-        
+        public void colorear(GraphicsDeviceManager grafo, SpriteBatch sprite, SpriteFont font)
+        {
+            Rectangle rect = new Rectangle((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2), Radio, Radio);
+            Rectangle prueba = new Rectangle((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2), Radio, Radio);
+
+            MonoGame.Primitives2D.DrawCircle(sprite, new Vector2((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2)), Radio + 2, 52, Color.White);
+            
+            for (int i = 0; i < 50; i++)
+            {
+                MonoGame.Primitives2D.DrawCircle(sprite, new Vector2((int)((CoordenadaX) - Radio / 2), (int)((CoordenadaY) - Radio / 2)), Radio - i, 52, Color.Green);
+            }
+            sprite.DrawString(font, valor.ToString(), new Vector2((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2)), Color.White);
+
+            if (NodoIzquierdo != null)
+            {
+                NodoIzquierdo.colorear(grafo, sprite, font);
+            }
+            if(NodoDerecho != null)
+            {
+                NodoDerecho.colorear(grafo, sprite, font);
+            }
+           
+
+
+        }
+
+        /*public void ImprimirPre(GraphicsDeviceManager grafo, SpriteBatch sprite, ArbolValanceado Raiz, SpriteFont font)
+        {
+            if (Raiz != null)
+            {
+                //Console.Write(Raiz.info + " ");
+                MonoGame.Primitives2D.DrawCircle(sprite, new Vector2((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2)), Radio + 2, 52, Color.White);
+
+                for (int i = 0; i < 50; i++)
+                {
+
+                    MonoGame.Primitives2D.DrawCircle(sprite, new Vector2((int)((CoordenadaX) - Radio / 2), (int)((CoordenadaY) - Radio / 2)), Radio - i, 52, Color.Green);
+                    ImprimirPre(grafo, sprite, Raiz.NodoIzquierdo, font);
+                    ImprimirPre(grafo, sprite, Raiz.NodoDerecho, font);
+                }
+               
+                //sprite.DrawString(font, Raiz.valor.ToString(), new Vector2((int)(CoordenadaX - 200), (int)(CoordenadaY - 500)), Color.Black);
+                //DibujarArbol(ImprimirPre);
+            }
+        }*/
+
+
 
     }
 }

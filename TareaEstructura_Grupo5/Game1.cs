@@ -34,7 +34,8 @@ namespace TareaEstructura_Grupo5
         Button btn2;
         Button btn3;
         DibujarArbolValanceado arbolAVL = new DibujarArbolValanceado(null);
-        DibujarArbolValanceado arbolAVL_Letra = new DibujarArbolValanceado(null);
+
+       // DibujarArbolValanceado arbolAVL_Letra = new DibujarArbolValanceado(null);
         //Graphics g;
         int pintaR = 0;
 
@@ -190,7 +191,7 @@ namespace TareaEstructura_Grupo5
 
 
             }
-
+           
             base.Update(gameTime);
         }
 
@@ -207,7 +208,7 @@ namespace TareaEstructura_Grupo5
            // _spriteBatch.DrawString(_fuente, _estadoMouse.Y.ToString(), new Vector2(50, 50), Microsoft.Xna.Framework.Color.Black);
          
 
-            
+             //click con mouse en base a coordenadas de la textura
             if(opcion1)
             {
 
@@ -215,9 +216,10 @@ namespace TareaEstructura_Grupo5
                
                 cont++;
 
-               
-
+                //arbolAVL.ImprimirPre(arbolAVL.Raiz);
+                
                 opcion1 = false;
+                
             }
             if (opcion2)
             {
@@ -230,8 +232,15 @@ namespace TareaEstructura_Grupo5
                 opcion2 = false;
             }
 
-            arbolAVL.DibujarArbol(_graphics, _spriteBatch, 3, fuentenodo);
+            if (opcion3)
+            {
 
+                opcion3 = false;
+            }
+           
+            arbolAVL.DibujarArbol(_graphics, _spriteBatch, 3, fuentenodo);
+          //  arbolAVL.colorear(_graphics, _spriteBatch,  fuentenodo, arbolAVL.Raiz, true, false, false);
+          
             //368 y 550 x en insertar
             //25-60 y en insertar
 
@@ -242,28 +251,7 @@ namespace TareaEstructura_Grupo5
             base.Draw(gameTime);
         }
 
-        /*public void Dibujo()
-        {
-            Graphics g;
-            //_spriteBatch.Clear(this.BackColor);
-            en.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
-            en.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g = en;
-            Font fuente = new Font("Arial", 10);
-            arbolAVL.DibujarArbol(g, fuente,
-            Brushes.White, Brushes.Black, Pens.White, dato, Brushes.Black);
-            datb = 0;
-            if (pintaR == 1)
-            {
-                // arbolAVL.colorear(g, this.Font, Brushes.Black, Brushes.Yellow, Pens.Blue, arbolAVL.Raiz, post.Checked,ino.Checked, pre.Checked);
-                pintaR = 0;
-            }
-            if (pintaR == 2)
-            {
-                arbolAVL.colorearB(g, fuente, Brushes.White, Brushes.Red, Pens.White, arbolAVL.Raiz, dato);
-                pintaR = 0;
-            }
-        }*/
+        
 
         private void changeButton() // para cambiar los btones
         {
