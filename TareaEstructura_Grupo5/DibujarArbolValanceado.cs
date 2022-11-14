@@ -104,10 +104,16 @@ namespace TareaEstructura_Grupo5
         {
             //int nada = 0;
             if (Raiz == null)
-                //nada = 3;
+            {
                 MessageBox.Show("Arbol AVL Vacío", "Error", MessageBoxButtons.OK);
+            }
+                //nada = 3;
+               
             else
+            {
                 Raiz.buscar(x, Raiz);
+            }
+               
 
         }
 

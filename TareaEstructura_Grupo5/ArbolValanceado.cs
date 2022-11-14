@@ -274,26 +274,43 @@ namespace TareaEstructura_Grupo5
         //Buscar un valor en el arbol
         public void buscar(int valorBuscar, ArbolValanceado Raiz)
         {
+
             if (Raiz != null)
             {
-                if (valorBuscar < Raiz.valor)
+
+                if (valorBuscar == Raiz.valor)
                 {
-                    buscar(valorBuscar, Raiz.NodoIzquierdo);
-                    MessageBox.Show("Nodo: " + valorBuscar + " encontrado en la posición X: " + CoordenadaX + ", Y: " + CoordenadaY, "INFORMACIÓN NODOS", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    // MessageBox.Show("Nodo encontrado en la posición X: " + valor.CoordenadaX + ", Y: " + valorBuscar.CoordenadaY, "Error", MessageBoxButtons.OK);
-                    //    encontrado(p);
+                    MessageBox.Show("Nodo: " + Raiz.valor + " encontrado en la posición X: " + Raiz.CoordenadaX + ", Y: " + Raiz.CoordenadaY, "INFORMACIÓN NODOS", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    encontrado(Raiz);
                 }
                 else
                 {
-                    if (valorBuscar > Raiz.valor)
+                    if (valorBuscar < Raiz.valor)
                     {
-                        buscar(valorBuscar, Raiz.NodoDerecho);
-                        MessageBox.Show("Nodo: " + valorBuscar + " encontrado en la posición X: " + CoordenadaX + ", Y: " + CoordenadaY, "INFORMACIÓN NODOS", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        buscar(valorBuscar, Raiz.NodoIzquierdo);
+                       // Raiz = Raiz.NodoIzquierdo;
+                        // MessageBox.Show("Nodo encontrado en la posición X: " + valor.CoordenadaX + ", Y: " + valorBuscar.CoordenadaY, "Error", MessageBoxButtons.OK);
+                        //    encontrado(p);
+                    }
+                    else
+                    {
+                        if (valorBuscar > Raiz.valor)
+                        {
+                            //Raiz = Raiz.NodoDerecho;
+                            buscar(valorBuscar, Raiz.NodoDerecho);
+
+                        }
                     }
                 }
+
             }
-            ///else
-               // MessageBox.Show("Valor no encontrado", "Error", MessageBoxButtons.OK);
+
+            else
+                MessageBox.Show("Valor no encontrado", "Error", MessageBoxButtons.OK);
+
+
+
+
         }
         /*++++++++++++FUNCIONES PARA DIBUJAR EL ÁRBOL +++++++++++++*/
 
@@ -347,7 +364,10 @@ namespace TareaEstructura_Grupo5
             }
         }
         // Dibuja las ramas de los nodos izquierdo y derecho
-
+        public void encontrado(ArbolValanceado Raiz)
+        {
+            Rectangle rec = new Rectangle(Raiz.CoordenadaX, Raiz.CoordenadaY, 40, 40);
+        }
         public void PosicionNodoreocrrido(ref int xmin, int ymin)
         {
             int aux1, aux2;
@@ -477,7 +497,7 @@ namespace TareaEstructura_Grupo5
             Rectangle prueba = new Rectangle((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2), Radio, Radio);
 
             MonoGame.Primitives2D.DrawCircle(sprite, new Vector2((int)(CoordenadaX - Radio / 2), (int)(CoordenadaY - Radio / 2)), Radio + 2, 52, Color.White);
-            
+
             for (int i = 0; i < 50; i++)
             {
                 MonoGame.Primitives2D.DrawCircle(sprite, new Vector2((int)((CoordenadaX) - Radio / 2), (int)((CoordenadaY) - Radio / 2)), Radio - i, 52, Color.Green);
@@ -488,11 +508,11 @@ namespace TareaEstructura_Grupo5
             {
                 NodoIzquierdo.colorear(grafo, sprite, font);
             }
-            if(NodoDerecho != null)
+            if (NodoDerecho != null)
             {
                 NodoDerecho.colorear(grafo, sprite, font);
             }
-           
+
 
 
         }
