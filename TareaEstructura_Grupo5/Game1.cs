@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
-
+using System.Text;
 namespace TareaEstructura_Grupo5
 {
     /* Tarea estructura de datos: Árbol AVL - Grupo 5
@@ -20,20 +20,22 @@ namespace TareaEstructura_Grupo5
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        //opciones para las iteraciones de mouse y botones de menu
         private bool opcion1 = false;
         private bool opcion2 = false;
         private bool opcion3 = false;
         string datoingresar = "";
+        public string cadenaPreorden { get; set; }
         //lista de botones
-        List<Button> listButtons = new List<Button>();
+        List<Button> listButtons = new List<Button>(); // lista para los botones de la clase buttons para tener cada uno de los botones creados
 
-        // INDICADOR DEL BOTON A SELECCIONAR
-        int _selectedButton = 0;
-        //botones
-        Button btn1;
-        Button btn2;
-        Button btn3;
-        DibujarArbolValanceado arbolAVL = new DibujarArbolValanceado(null);
+        
+        int _selectedButton = 0;// INDICADOR DEL BOTON A SELECCIONAR
+        //instancia de los botones
+        Button btn1; // boton insertar
+        Button btn2; //boton buscar
+        Button btn3; //boton exportar
+        DibujarArbolValanceado arbolAVL = new DibujarArbolValanceado(null); //creacion del objeto arbolAVL
 
        // DibujarArbolValanceado arbolAVL_Letra = new DibujarArbolValanceado(null);
         //Graphics g;
@@ -45,7 +47,7 @@ namespace TareaEstructura_Grupo5
         int cont2 = 0;
         Graphics g;
         //int pintaR = 0;
-
+        Microsoft.Xna.Framework.Color _color = Microsoft.Xna.Framework.Color.White;
         
         //
         int delay=0;
@@ -85,44 +87,43 @@ namespace TareaEstructura_Grupo5
         protected override void Initialize()
         {
 
-
+            /********************************************INICIALIZAMOS BOTONES*********************************************************/
             // para el primer boton - isnertar
            
-            btn1 = new Button(this);
-            btn1.Texture =  Content.Load<Texture2D>("INSER");
-            btn1.SourceRectangle =  new Microsoft.Xna.Framework.Rectangle(0,0,197, btn1.Texture.Height);
-            btn1.Position = new Vector2 (462 - btn1.Texture.Width/4,20);
+            btn1 = new Button(this); // inicializamos el boton insertar
+            //setteamos las propiedades del boton
+            btn1.Texture =  Content.Load<Texture2D>("INSER"); //cargamos la imagen
+            btn1.SourceRectangle =  new Microsoft.Xna.Framework.Rectangle(0,0,197, btn1.Texture.Height); //definimos el rectangulo para el boton insertar
+            btn1.Position = new Vector2 (462 - btn1.Texture.Width/4,20); // definimos la posicion - se divide en 4 ya que son dos texturas en una
+            //USAMOS EXPRESION LANDA
+          //  btn1.Click += btn => _color = Microsoft.Xna.Framework.Color.Orange;
 
-
-
-            // dato = Convert.ToInt16(_TextBoxNumeros.TextoActual);
-           // Font fuente = new Font("Arial", 10);
-           //
-           // btn1.Click += btn => arbolAVL.Insertar(dato);
-           // cont++;
-            this.Components.Add(btn1);
-        
             // para el segundo boton - buscar
 
-            btn2 = new Button(this);
-            btn2.Texture = Content.Load<Texture2D>("BUSC");
-            btn2.SourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, 0, 197, btn2.Texture.Height);
-            btn2.Position = new Vector2(693 - btn2.Texture.Width / 4, 20);
+            btn2 = new Button(this);//inicializamos el boton buscar 
+            btn2.Texture = Content.Load<Texture2D>("BUSC");//cargamos la imagen
+            btn2.SourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, 0, 197, btn2.Texture.Height);//definimos el rectangulo para el boton buscar
+            btn2.Position = new Vector2(693 - btn2.Texture.Width / 4, 20);// definimos la posicion
+           // btn2.Click += btn => _color = Microsoft.Xna.Framework.Color.Blue;
 
-            this.Components.Add(btn2);
 
             // para el tercero boton - exportar
 
-            btn3 = new Button(this);
-            btn3.Texture = Content.Load<Texture2D>("EXPOR");
-            btn3.SourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, 0, 197, btn3.Texture.Height);
-            btn3.Position = new Vector2(924 - btn3.Texture.Width / 4, 20);
+            btn3 = new Button(this);// inicializamos el boton exportar
+            btn3.Texture = Content.Load<Texture2D>("EXPOR");//cargamos la imagen
+            btn3.SourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, 0, 197, btn3.Texture.Height);// definimos el rectangulo para el boton exportar
+            btn3.Position = new Vector2(924 - btn3.Texture.Width / 4, 20);// definimos la posicion-se divide en 4 la textura ya que son dos texturas en una
+           // btn3.Click += btn => Exit();
 
-            this.Components.Add(btn3);
 
+            //agregamos los botones a la lista 
             listButtons.Add(btn1);
             listButtons.Add(btn2);
             listButtons.Add(btn3);
+
+            this.Components.Add(btn1); //lista de componentes del juego y agregamos el boton insertar
+            this.Components.Add(btn2); // lista de componenetes del juego y agregamos el boton buscar
+            this.Components.Add(btn3); /// lista de componentes del jueg y agregamos el boton exportar
             base.Initialize();
         }
 
@@ -149,45 +150,47 @@ namespace TareaEstructura_Grupo5
             _TextBoxNumeros.Update(); // traemos el update de la clase button en la cual esta la condicion del evento del boton
             
 
-            delay += gameTime.ElapsedGameTime.Milliseconds;
-            KeyboardState kbs = Keyboard.GetState();
-            if (kbs.IsKeyDown(Keys.Down) && delay >= 300)
+            delay += gameTime.ElapsedGameTime.Milliseconds; // definimos un delay para cuando se vea el efecto de seleccion de boton, por repeticion ira sumando los milisegundos
+            KeyboardState kbs = Keyboard.GetState(); // INSTANCIA DEL KEYBOARD
+
+            if (kbs.IsKeyDown(Keys.Down) && delay >= 300) // si se presiona la tecla hacia abajo y tendra un delay mayor o igual a 300 permitira realizar el cambio de boton 
             {
-                _selectedButton = _selectedButton - 1 > 0 ? _selectedButton - 1 : listButtons.Count - 1;
-                changeButton();
-                delay = 0;
+                //si llega a 0 que vuelva al del principio
+                _selectedButton = _selectedButton - 1 > 0 ? _selectedButton - 1 : listButtons.Count - 1; // tiene que cambiar el indice seleccionado
+                changeButton();// cambia de boton o de la imagen ya que crea un efecto de seleccion
+                delay = 0; // delay vuelve a 0
             }
 
-            if (kbs.IsKeyDown(Keys.Up) && delay >= 300)
+            if (kbs.IsKeyDown(Keys.Up) && delay >= 300) // si se presiona la tecla arriba y tendra un delay mayor o igual a 300
             {
-                _selectedButton = _selectedButton + 1 < listButtons.Count ? _selectedButton + 1 : 0;
-                changeButton();
-                delay = 0;
+                _selectedButton = _selectedButton + 1 < listButtons.Count ? _selectedButton + 1 : 0; // 
+                changeButton();// cambia de boton o de la imagen ya que crea un efecto de seleccion
+                delay = 0;//delay vuelve a 0
             }
 
             //mas eventos de clic en opcion1 = insertar
-            if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 368 && _estadoMouse.X <= 550) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60))
+            if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 368 && _estadoMouse.X <= 550) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60)) // si con el mouse damos click en las dimensiones del boton insertar 
             {
 
-                opcion1 = true;
+                opcion1 = true; // la opcion1 sera verdadera o se activara 
                
 
             }
 
             //mas eventos de clic en opcion2 =  buscar
-            if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 599 && _estadoMouse.X <= 791) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60))
+            if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 599 && _estadoMouse.X <= 791) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60))// si con el mouse damos click en las dimensiones del boton buscar
             {
                 
-                opcion2 = true;
+                opcion2 = true;// la opcion2 sera verdadera o se activara 
 
 
             }
 
             //mas eventos de clic en opcion1 = insertar
-            if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 828 && _estadoMouse.X <= 1022) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60))
+            if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 828 && _estadoMouse.X <= 1022) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60))// si con el mouse damos click en las dimensiones del boton exportar
             {
                 
-                opcion3 = true;
+                opcion3 = true;// la opcion3 sera verdadera o se activara 
 
 
             }
@@ -203,6 +206,7 @@ namespace TareaEstructura_Grupo5
             _TextBoxNumeros.Render(_spriteBatch);
 
 
+
            
 
            // _spriteBatch.DrawString(_fuente, _estadoMouse.Y.ToString(), new Vector2(50, 50), Microsoft.Xna.Framework.Color.Black);
@@ -212,24 +216,24 @@ namespace TareaEstructura_Grupo5
             if(opcion1)
             {
 
-                arbolAVL.Insertar(Convert.ToInt32(datoingresar));
+                arbolAVL.Insertar(Convert.ToInt32(datoingresar)); // se llama al metodo insertar
                
-                cont++;
+                cont++; // aunmenta el contador
 
                 //arbolAVL.ImprimirPre(arbolAVL.Raiz);
                 
-                opcion1 = false;
+                opcion1 = false; // vuelve a false para que no ocurran errores
                 
             }
             if (opcion2)
             {
-                arbolAVL.buscar(Convert.ToInt32(datoingresar));
+                arbolAVL.buscar(Convert.ToInt32(datoingresar));// se llama al metodo buscar
 
-                cont++;
+                cont++;// aunmenta el contador
 
 
 
-                opcion2 = false;
+                opcion2 = false;// vuelve a false para que no ocurran errores
             }
 
             if (opcion3)
@@ -238,9 +242,18 @@ namespace TareaEstructura_Grupo5
                 opcion3 = false;
             }
            
-            arbolAVL.DibujarArbol(_graphics, _spriteBatch, 3, fuentenodo);
-          //  arbolAVL.colorear(_graphics, _spriteBatch,  fuentenodo, arbolAVL.Raiz, true, false, false);
-          
+            arbolAVL.DibujarArbol(_graphics, _spriteBatch, 3, fuentenodo); // dibuja el arbol
+
+            //
+            //arbolAVL.ImprimirPre(_fuente);
+
+
+          //  _spriteBatch.DrawString(_fuente, text: $"Recorrido preorde: {ImprimirPrem()}", position: new Vector2(655, 60), color: Microsoft.Xna.Framework.Color.White) ;
+            
+            // _spriteBatch.DrawString(_fuente, , new Vector2(50, 50), Microsoft.Xna.Framework.Color.Black);
+
+            //  arbolAVL.colorear(_graphics, _spriteBatch,  fuentenodo, arbolAVL.Raiz, true, false, false);
+
             //368 y 550 x en insertar
             //25-60 y en insertar
 
@@ -255,12 +268,12 @@ namespace TareaEstructura_Grupo5
 
         private void changeButton() // para cambiar los btones
         {
-            for (int i = 0; i < listButtons.Count; i++)
+            for (int i = 0; i < listButtons.Count; i++) //  cantidad de botonnes que contiene la lista
             {
-                if (i == _selectedButton)
-                    listButtons[i].IsSelected = true;
-                else
-                    listButtons[i].IsSelected = false;
+                if (i == _selectedButton) // si el indice seleccioado es igual a selected button
+                    listButtons[i].IsSelected = true; // el cambio se realizara en base al indice de la lista de botones
+                else //  sino
+                    listButtons[i].IsSelected = false; // no se realiza cambio
 
                 
             }
@@ -360,5 +373,27 @@ namespace TareaEstructura_Grupo5
             }
             return Keys.None;
         }
+
+        private string ImprimirPre(ArbolValanceado Raiz)
+        {
+            if (Raiz != null)
+            {
+                cadenaPreorden+=Raiz.valor + " ";
+                ImprimirPre(Raiz.NodoIzquierdo);
+                ImprimirPre(Raiz.NodoDerecho);
+                //DibujarArbol(ImprimirPre);
+            }
+            return cadenaPreorden;
+        }
+        public string ImprimirPrem()
+        {
+
+            
+            ImprimirPre(arbolAVL.Raiz);
+            return cadenaPreorden;
+            //Console.WriteLine();
+
+        }
+
     }
 }
