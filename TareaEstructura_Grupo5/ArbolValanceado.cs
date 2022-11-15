@@ -230,7 +230,7 @@ namespace TareaEstructura_Grupo5
             }
             else
             {
-                //MessageBox.Show("Nodo inexistente en el arbol", "Error", MessageBoxButtons.OK);
+               MessageBox.Show("Nodo inexistente en el arbol", "Error", MessageBoxButtons.OK);
             }
             return nodoP;
         }
@@ -537,7 +537,7 @@ namespace TareaEstructura_Grupo5
 
 
         }
-
+       
         /*public void ImprimirPre(GraphicsDeviceManager grafo, SpriteBatch sprite, ArbolValanceado Raiz, SpriteFont font)
         {
             if (Raiz != null)

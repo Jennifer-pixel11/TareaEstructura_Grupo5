@@ -9,6 +9,8 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
 using System.Text;
+
+
 namespace TareaEstructura_Grupo5
 {
     /* Tarea estructura de datos: Árbol AVL - Grupo 5
@@ -24,20 +26,29 @@ namespace TareaEstructura_Grupo5
         private bool opcion1 = false;
         private bool opcion2 = false;
         private bool opcion3 = false;
+        private bool opcion4 = false;
+
+
+
+        private bool preOr = false;
+        private bool InOr = false;
+        private bool PosOr = false;
         string datoingresar = "";
         public string cadenaPreorden { get; set; }
         //lista de botones
         List<Button> listButtons = new List<Button>(); // lista para los botones de la clase buttons para tener cada uno de los botones creados
 
-        
+
         int _selectedButton = 0;// INDICADOR DEL BOTON A SELECCIONAR
         //instancia de los botones
         Button btn1; // boton insertar
         Button btn2; //boton buscar
         Button btn3; //boton exportar
+        Button btn4; //boton eLIMINAR
+
         DibujarArbolValanceado arbolAVL = new DibujarArbolValanceado(null); //creacion del objeto arbolAVL
 
-       // DibujarArbolValanceado arbolAVL_Letra = new DibujarArbolValanceado(null);
+        // DibujarArbolValanceado arbolAVL_Letra = new DibujarArbolValanceado(null);
         //Graphics g;
         int pintaR = 0;
 
@@ -48,24 +59,24 @@ namespace TareaEstructura_Grupo5
         Graphics g;
         //int pintaR = 0;
         Microsoft.Xna.Framework.Color _color = Microsoft.Xna.Framework.Color.White;
-        
+
         //
-        int delay=0;
+        int delay = 0;
         //definimos el alto y el ancho de la ppantalla como constantes 
         const int Alto = 650; //  alto de la pantalla
         const int Ancho = 1309; // ancho de la panatalla 
 
         // variables para los textbox
-      //  private TextBox textoActual;
+        //  private TextBox textoActual;
         private TextBox _TextBoxNumeros;
         private Vector2 _PosicionTextBox;
-        private SpriteFont _fuente,fuentenodo;
+        private SpriteFont _fuente, fuentenodo;
         private int _longitud;
         private MouseState _estadoMouse;
         private KeyboardState _estadoKeyboard;
         private int _tiempoAccion;
 
-       
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -79,7 +90,7 @@ namespace TareaEstructura_Grupo5
             _tiempoAccion = 10;
             IsMouseVisible = true;
             //_TextBoxNumeros.TextoActual(dato);
-        
+
 
 
         }
@@ -89,14 +100,14 @@ namespace TareaEstructura_Grupo5
 
             /********************************************INICIALIZAMOS BOTONES*********************************************************/
             // para el primer boton - isnertar
-           
+
             btn1 = new Button(this); // inicializamos el boton insertar
             //setteamos las propiedades del boton
-            btn1.Texture =  Content.Load<Texture2D>("INSER"); //cargamos la imagen
-            btn1.SourceRectangle =  new Microsoft.Xna.Framework.Rectangle(0,0,197, btn1.Texture.Height); //definimos el rectangulo para el boton insertar
-            btn1.Position = new Vector2 (462 - btn1.Texture.Width/4,20); // definimos la posicion - se divide en 4 ya que son dos texturas en una
-            //USAMOS EXPRESION LANDA
-          //  btn1.Click += btn => _color = Microsoft.Xna.Framework.Color.Orange;
+            btn1.Texture = Content.Load<Texture2D>("INSER"); //cargamos la imagen
+            btn1.SourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, 0, 197, btn1.Texture.Height); //definimos el rectangulo para el boton insertar
+            btn1.Position = new Vector2(462 - btn1.Texture.Width / 4, 20); // definimos la posicion - se divide en 4 ya que son dos texturas en una
+                                                                           //USAMOS EXPRESION LANDA
+                                                                           //  btn1.Click += btn => _color = Microsoft.Xna.Framework.Color.Orange;
 
             // para el segundo boton - buscar
 
@@ -104,7 +115,7 @@ namespace TareaEstructura_Grupo5
             btn2.Texture = Content.Load<Texture2D>("BUSC");//cargamos la imagen
             btn2.SourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, 0, 197, btn2.Texture.Height);//definimos el rectangulo para el boton buscar
             btn2.Position = new Vector2(693 - btn2.Texture.Width / 4, 20);// definimos la posicion
-           // btn2.Click += btn => _color = Microsoft.Xna.Framework.Color.Blue;
+                                                                          // btn2.Click += btn => _color = Microsoft.Xna.Framework.Color.Blue;
 
 
             // para el tercero boton - exportar
@@ -113,17 +124,25 @@ namespace TareaEstructura_Grupo5
             btn3.Texture = Content.Load<Texture2D>("EXPOR");//cargamos la imagen
             btn3.SourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, 0, 197, btn3.Texture.Height);// definimos el rectangulo para el boton exportar
             btn3.Position = new Vector2(924 - btn3.Texture.Width / 4, 20);// definimos la posicion-se divide en 4 la textura ya que son dos texturas en una
-           // btn3.Click += btn => Exit();
+                                                                          // btn3.Click += btn => Exit();
 
-
-            //agregamos los botones a la lista 
+            btn4 = new Button(this);// inicializamos el boton exportar
+            btn4.Texture = Content.Load<Texture2D>("ELIMI");//cargamos la imagen
+            btn4.SourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, 0, 172, btn4.Texture.Height);// definimos el rectangulo para el boton exportar
+            btn4.Position = new Vector2(1150 - btn4.Texture.Width / 4, 20);// definimos la posicion-se divide en 4 la textura ya que son dos texturas en una
+                                                                          // btn3.Click += btn => Exit();
+                                                                          //agregamos los botones a la lista 
             listButtons.Add(btn1);
             listButtons.Add(btn2);
             listButtons.Add(btn3);
+            listButtons.Add(btn4);
+
 
             this.Components.Add(btn1); //lista de componentes del juego y agregamos el boton insertar
             this.Components.Add(btn2); // lista de componenetes del juego y agregamos el boton buscar
             this.Components.Add(btn3); /// lista de componentes del jueg y agregamos el boton exportar
+            this.Components.Add(btn4); /// lista de componentes del jueg y agregamos el boton eLIMINAR
+
             base.Initialize();
         }
 
@@ -135,7 +154,7 @@ namespace TareaEstructura_Grupo5
             //creando el textbox
             _TextBoxNumeros = new TextBox(CargarTextura("textbox"), new Microsoft.Xna.Framework.Point(122, 24), new Microsoft.Xna.Framework.Point(2, 12), _PosicionTextBox, _longitud, true, true, _fuente, String.Empty, 0.9f);
 
-           
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -145,10 +164,10 @@ namespace TareaEstructura_Grupo5
 
             _estadoKeyboard = EstadoKeyboard.GetState(); // 
             _estadoMouse = EstadoMouse.GetState(); //
-            
-            Entrada(gameTime); 
+
+            Entrada(gameTime);
             _TextBoxNumeros.Update(); // traemos el update de la clase button en la cual esta la condicion del evento del boton
-            
+
 
             delay += gameTime.ElapsedGameTime.Milliseconds; // definimos un delay para cuando se vea el efecto de seleccion de boton, por repeticion ira sumando los milisegundos
             KeyboardState kbs = Keyboard.GetState(); // INSTANCIA DEL KEYBOARD
@@ -173,28 +192,43 @@ namespace TareaEstructura_Grupo5
             {
 
                 opcion1 = true; // la opcion1 sera verdadera o se activara 
-               
+
 
             }
 
             //mas eventos de clic en opcion2 =  buscar
             if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 599 && _estadoMouse.X <= 791) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60))// si con el mouse damos click en las dimensiones del boton buscar
             {
-                
+
                 opcion2 = true;// la opcion2 sera verdadera o se activara 
 
 
             }
 
-            //mas eventos de clic en opcion1 = insertar
+            //mas eventos de clic en opcion3 =  exportar
             if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 828 && _estadoMouse.X <= 1022) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60))// si con el mouse damos click en las dimensiones del boton exportar
             {
-                
+
                 opcion3 = true;// la opcion3 sera verdadera o se activara 
 
 
             }
-           
+
+            //botn eliminar
+            if (_estadoMouse.LeftButton == ButtonState.Pressed && (_estadoMouse.X >= 1064 && _estadoMouse.X <= 1235) && (_estadoMouse.Y >= 25 && _estadoMouse.Y <= 60))// si con el mouse damos click en las dimensiones del boton exportar
+            {
+
+                opcion4 = true;// la opcion3 sera verdadera o se activara 
+
+
+            }
+
+
+
+
+
+
+
             base.Update(gameTime);
         }
 
@@ -207,24 +241,31 @@ namespace TareaEstructura_Grupo5
 
 
 
+
+
+           //  _spriteBatch.DrawString(_fuente, _estadoMouse.X.ToString(), new Vector2(50, 50), Microsoft.Xna.Framework.Color.Black);
+
+            
+               if (opcion1)
+                {
+
+                    arbolAVL.Insertar(Convert.ToInt32(datoingresar)); // se llama al metodo insertar
+                                                                      //  arbolAVL.ImprimirPre(arbolAVL.Raiz);
+                    cont++; // aunmenta el contador
+
+                    //arbolAVL.ImprimirPre(arbolAVL.Raiz);
+
+                    opcion1 = false; // vuelve a false para que no ocurran errores
+                                     //preOr = false;
+
+                }
+                else
+                {
+                 // Microsoft.Xna.Framework.Input.MessageBox.Show("SELECCIONE UN BOTON", "Error", System.Windows.Forms.MessageBoxButtons.OK);
+                }
+            
+            //click con mouse en base a coordenadas de la textura
            
-
-           // _spriteBatch.DrawString(_fuente, _estadoMouse.Y.ToString(), new Vector2(50, 50), Microsoft.Xna.Framework.Color.Black);
-         
-
-             //click con mouse en base a coordenadas de la textura
-            if(opcion1)
-            {
-
-                arbolAVL.Insertar(Convert.ToInt32(datoingresar)); // se llama al metodo insertar
-               
-                cont++; // aunmenta el contador
-
-                //arbolAVL.ImprimirPre(arbolAVL.Raiz);
-                
-                opcion1 = false; // vuelve a false para que no ocurran errores
-                
-            }
             if (opcion2)
             {
                 arbolAVL.buscar(Convert.ToInt32(datoingresar));// se llama al metodo buscar
@@ -236,24 +277,31 @@ namespace TareaEstructura_Grupo5
                 opcion2 = false;// vuelve a false para que no ocurran errores
             }
 
-            if (opcion3)
+            if (opcion3)// PARA EXPORTAR
             {
-
-                opcion3 = false;
+               
             }
-           
-            arbolAVL.DibujarArbol(_graphics, _spriteBatch, 3, fuentenodo); // dibuja el arbol
+            if (opcion4)
+            {
+                arbolAVL.Eliminar(Convert.ToInt32(datoingresar));
+
+                cont++;// aunmenta el contador
+
+                opcion4 = false;
+            }
+            
+
+            arbolAVL.DibujarArbol(_graphics, _spriteBatch, 3, fuentenodo);// dibuja el arbol
 
             //
             //arbolAVL.ImprimirPre(_fuente);
 
 
-          //  _spriteBatch.DrawString(_fuente, text: $"Recorrido preorde: {ImprimirPrem()}", position: new Vector2(655, 60), color: Microsoft.Xna.Framework.Color.White) ;
-            
-            // _spriteBatch.DrawString(_fuente, , new Vector2(50, 50), Microsoft.Xna.Framework.Color.Black);
+           // _spriteBatch.DrawString(_fuente, text: $"Recorrido preorde: " , position: new Vector2(655, 60), color: Microsoft.Xna.Framework.Color.White);
 
-            //  arbolAVL.colorear(_graphics, _spriteBatch,  fuentenodo, arbolAVL.Raiz, true, false, false);
+           
 
+           
             //368 y 550 x en insertar
             //25-60 y en insertar
 
@@ -264,7 +312,7 @@ namespace TareaEstructura_Grupo5
             base.Draw(gameTime);
         }
 
-        
+
 
         private void changeButton() // para cambiar los btones
         {
@@ -275,7 +323,7 @@ namespace TareaEstructura_Grupo5
                 else //  sino
                     listButtons[i].IsSelected = false; // no se realiza cambio
 
-                
+
             }
         }
 
@@ -329,7 +377,7 @@ namespace TareaEstructura_Grupo5
                     if (((int)keys[0] >= 48 && (int)keys[0] <= 57) || ((int)keys[0] >= 96 && (int)keys[0] <= 105))
                     {
                         value = keys[0].ToString().Substring(keys[0].ToString().Length - 1);
-                       
+
                         if (EstadoKeyboard.TeclaNoPrecionada(keys[0]))
                         {
                             _TextBoxNumeros.AgregarTexto(value.ToCharArray()[0]);
@@ -341,7 +389,7 @@ namespace TareaEstructura_Grupo5
                 {
                     _TextBoxNumeros.AgregarTexto(dato);
                 }
-                datoingresar = value;  
+                datoingresar = value;
 
             }
         }
@@ -374,26 +422,7 @@ namespace TareaEstructura_Grupo5
             return Keys.None;
         }
 
-        private string ImprimirPre(ArbolValanceado Raiz)
-        {
-            if (Raiz != null)
-            {
-                cadenaPreorden+=Raiz.valor + " ";
-                ImprimirPre(Raiz.NodoIzquierdo);
-                ImprimirPre(Raiz.NodoDerecho);
-                //DibujarArbol(ImprimirPre);
-            }
-            return cadenaPreorden;
-        }
-        public string ImprimirPrem()
-        {
 
-            
-            ImprimirPre(arbolAVL.Raiz);
-            return cadenaPreorden;
-            //Console.WriteLine();
-
-        }
 
     }
 }

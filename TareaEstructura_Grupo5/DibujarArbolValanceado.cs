@@ -19,7 +19,7 @@ namespace TareaEstructura_Grupo5
     {
         public ArbolValanceado Raiz;
         public ArbolValanceado aux;
-
+        public string cadenaPre { get; set; }
        
         // Constructor.
         public DibujarArbolValanceado()
@@ -110,48 +110,48 @@ namespace TareaEstructura_Grupo5
 
         }
 
-  
+        
 
-        public void colorear(GraphicsDeviceManager gra, SpriteBatch sprite,  SpriteFont font, ArbolValanceado Raiz, bool post, bool inor, bool preor)
-        {
-            //Brush entorno = Brushes.Red;
-            if (inor == true)
-            {
-                if (Raiz != null)
-                {
-                    colorear(gra, sprite,  font, Raiz.NodoIzquierdo, post, inor, preor);
-                    Raiz.colorear(gra,sprite, font);
-                    Thread.Sleep(10);
-                    // pausar la ejecución 1000 milisegundos
-                    Raiz.colorear(gra, sprite, font);
-                    colorear(gra, sprite, font, Raiz.NodoDerecho, post, inor, preor);
-                }
-            }
-            else
-            if (preor == true)
-            {
-                if (Raiz != null)
-                {
-                    Raiz.colorear(gra, sprite, font);
-                    Thread.Sleep(1000);
-                    // pausar la ejecución 1000 milisegundos
-                    Raiz.colorear(gra, sprite, font);
-                    colorear(gra, sprite, font, Raiz.NodoIzquierdo, post, inor, preor);
-                    colorear(gra, sprite,  font, Raiz.NodoDerecho, post, inor, preor);
-                }
-            }
-            else if (post == true)
-            {
-                if (Raiz != null)
-                {
-                    colorear(gra, sprite,  font, Raiz.NodoIzquierdo, post, inor, preor);
-                    colorear(gra, sprite,  font, Raiz.NodoDerecho, post, inor, preor);
-                    Raiz.colorear(gra, sprite, font);
-                    Thread.Sleep(1000); // pausar la ejecución 1000 milisegundos
-                    Raiz.colorear(gra, sprite, font);
-                }
-            }
-        }
+        /*  public void colorear(GraphicsDeviceManager gra, SpriteBatch sprite,  SpriteFont font, ArbolValanceado Raiz, bool post, bool inor, bool preor)
+          {
+              //Brush entorno = Brushes.Red;
+              if (inor == true)
+              {
+                  if (Raiz != null)
+                  {
+                      colorear(gra, sprite,  font, Raiz.NodoIzquierdo, post, inor, preor);
+                      Raiz.colorear(gra,sprite, font);
+                      Thread.Sleep(10);
+                      // pausar la ejecución 1000 milisegundos
+                      Raiz.colorear(gra, sprite, font);
+                      colorear(gra, sprite, font, Raiz.NodoDerecho, post, inor, preor);
+                  }
+              }
+              else
+              if (preor == true)
+              {
+                  if (Raiz != null)
+                  {
+                      Raiz.colorear(gra, sprite, font);
+                      Thread.Sleep(1000);
+                      // pausar la ejecución 1000 milisegundos
+                      Raiz.colorear(gra, sprite, font);
+                      colorear(gra, sprite, font, Raiz.NodoIzquierdo, post, inor, preor);
+                      colorear(gra, sprite,  font, Raiz.NodoDerecho, post, inor, preor);
+                  }
+              }
+              else if (post == true)
+              {
+                  if (Raiz != null)
+                  {
+                      colorear(gra, sprite,  font, Raiz.NodoIzquierdo, post, inor, preor);
+                      colorear(gra, sprite,  font, Raiz.NodoDerecho, post, inor, preor);
+                      Raiz.colorear(gra, sprite, font);
+                      Thread.Sleep(1000); // pausar la ejecución 1000 milisegundos
+                      Raiz.colorear(gra, sprite, font);
+                  }
+              }
+          }*/
 
     }
 }
