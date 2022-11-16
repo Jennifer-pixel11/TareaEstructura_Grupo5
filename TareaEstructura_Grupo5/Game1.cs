@@ -68,13 +68,13 @@ namespace TareaEstructura_Grupo5
 
         // variables para los textbox
         //  private TextBox textoActual;
-        private TextBox _TextBoxNumeros;
-        private Vector2 _PosicionTextBox;
-        private SpriteFont _fuente, fuentenodo;
-        private int _longitud;
-        private MouseState _estadoMouse;
-        private KeyboardState _estadoKeyboard;
-        private int _tiempoAccion;
+        private TextBox _TextBoxNumeros;//cuadro de textbox
+        private Vector2 _PosicionTextBox; //contiene la posicion del txtbox
+        private SpriteFont _fuente, fuentenodo;//fuente de texto
+        private int _longitud; // longitud donde se almacena los numeros
+        private MouseState _estadoMouse; //recibe el estado del mouse de la clase EstadoMouse
+        private KeyboardState _estadoKeyboard;//recibe el estado del teclado de la clase EstadoKeyboard
+        private int _tiempoAccion;//realiza la ejercucion de eliminarcion (tiempo de animacion para borrrar los numeros)
 
 
         public Game1()
@@ -130,8 +130,8 @@ namespace TareaEstructura_Grupo5
             btn4.Texture = Content.Load<Texture2D>("ELIMI");//cargamos la imagen
             btn4.SourceRectangle = new Microsoft.Xna.Framework.Rectangle(0, 0, 172, btn4.Texture.Height);// definimos el rectangulo para el boton exportar
             btn4.Position = new Vector2(1150 - btn4.Texture.Width / 4, 20);// definimos la posicion-se divide en 4 la textura ya que son dos texturas en una
-                                                                          // btn3.Click += btn => Exit();
-                                                                          //agregamos los botones a la lista 
+                                                                           // btn3.Click += btn => Exit();
+                                                                           //agregamos los botones a la lista 
             listButtons.Add(btn1);
             listButtons.Add(btn2);
             listButtons.Add(btn3);
@@ -162,8 +162,8 @@ namespace TareaEstructura_Grupo5
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _estadoKeyboard = EstadoKeyboard.GetState(); // 
-            _estadoMouse = EstadoMouse.GetState(); //
+            _estadoKeyboard = EstadoKeyboard.GetState(); // obtiene el estado del teclado
+            _estadoMouse = EstadoMouse.GetState(); // obtiene el estado del mouse
 
             Entrada(gameTime);
             _TextBoxNumeros.Update(); // traemos el update de la clase button en la cual esta la condicion del evento del boton
@@ -243,29 +243,26 @@ namespace TareaEstructura_Grupo5
 
 
 
-           //  _spriteBatch.DrawString(_fuente, _estadoMouse.X.ToString(), new Vector2(50, 50), Microsoft.Xna.Framework.Color.Black);
+            //  _spriteBatch.DrawString(_fuente, _estadoMouse.X.ToString(), new Vector2(50, 50), Microsoft.Xna.Framework.Color.Black);
 
-            
-               if (opcion1)
-                {
 
-                    arbolAVL.Insertar(Convert.ToInt32(datoingresar)); // se llama al metodo insertar
-                                                                      //  arbolAVL.ImprimirPre(arbolAVL.Raiz);
-                    cont++; // aunmenta el contador
+            if (opcion1)
+            {
 
-                    //arbolAVL.ImprimirPre(arbolAVL.Raiz);
+                arbolAVL.Insertar(Convert.ToInt32(datoingresar)); // se llama al metodo insertar
+                                                                  //  arbolAVL.ImprimirPre(arbolAVL.Raiz);
+                cont++; // aunmenta el contador
 
-                    opcion1 = false; // vuelve a false para que no ocurran errores
-                                     //preOr = false;
+                //arbolAVL.ImprimirPre(arbolAVL.Raiz);
 
-                }
-                else
-                {
-                 // Microsoft.Xna.Framework.Input.MessageBox.Show("SELECCIONE UN BOTON", "Error", System.Windows.Forms.MessageBoxButtons.OK);
-                }
-            
+                opcion1 = false; // vuelve a false para que no ocurran errores
+                                 //preOr = false;
+
+            }
+
+
             //click con mouse en base a coordenadas de la textura
-           
+
             if (opcion2)
             {
                 arbolAVL.buscar(Convert.ToInt32(datoingresar));// se llama al metodo buscar
@@ -279,7 +276,7 @@ namespace TareaEstructura_Grupo5
 
             if (opcion3)// PARA EXPORTAR
             {
-               
+
             }
             if (opcion4)
             {
@@ -289,19 +286,19 @@ namespace TareaEstructura_Grupo5
 
                 opcion4 = false;
             }
-            
+
 
             arbolAVL.DibujarArbol(_graphics, _spriteBatch, 3, fuentenodo);// dibuja el arbol
 
             //
-            //arbolAVL.ImprimirPre(_fuente);
 
 
-           // _spriteBatch.DrawString(_fuente, text: $"Recorrido preorde: " , position: new Vector2(655, 60), color: Microsoft.Xna.Framework.Color.White);
 
-           
+            // _spriteBatch.DrawString(_fuente, text: $"Recorrido preorde: " , position: new Vector2(655, 60), color: Microsoft.Xna.Framework.Color.White);
 
-           
+
+
+
             //368 y 550 x en insertar
             //25-60 y en insertar
 
@@ -328,66 +325,69 @@ namespace TareaEstructura_Grupo5
         }
 
         protected void Entrada(GameTime gameTime)
-        {
+        {//matriz de teclas que es igual al estado de teclado
             Keys[] keys = _estadoKeyboard.GetPressedKeys();
             String value = String.Empty;
 
 
 
-
+            //evalua el estado del mouse si se hace click izquierdo
             if (_estadoMouse.LeftButton == ButtonState.Pressed)
             {
-                if (EstadoMouse.NoClick(true))
+                if (EstadoMouse.NoClick(true))//si no se hizo click izquierdo este llama al metodo ClickIzquierdo
                 {
                     ClickIzquierdo();
                 }
             }
+            //a travez del tiempoAccion, este ejecuta borrar 
+            // "haciendo la animacion de borrar" numero actualizando el txtbox
             if (_estadoKeyboard.IsKeyUp(Keys.Back) && _estadoKeyboard.IsKeyUp(Keys.Delete))
             {
-                _tiempoAccion = 10;
+                _tiempoAccion = 10;// tiempo de animacion para la ejecucion ya mencionados
             }
             if (keys.Count() > 0)
             {
-                if (keys.Count() > 1)
+                if (keys.Count() > 1)//si la matriz de teclas tiene mas de una tecla
                 {
-                    keys[0] = ExtraerNumero(keys);
+                    keys[0] = ExtraerNumero(keys);//extra un numero ingresado 
                 }
                 if (_estadoKeyboard.IsKeyDown(Keys.Back) || _estadoKeyboard.IsKeyDown(Keys.Delete))
+                //cuando se preciona eliminar se ejecuta la "animacion" a travez de _tiempoAccion
                 {
-                    if (_tiempoAccion == 0)
+                    if (_tiempoAccion == 0) // cuando el tiempo esta en 0 vuelte a 10 milisegundos
                     {
                         _tiempoAccion = 10;
                     }
-                    if (_tiempoAccion == 10)
+                    if (_tiempoAccion == 10)//cuando pasaron 10 milisegundos realiza el siguente proceso
                     {
-                        if (_TextBoxNumeros.Seleccionado)
+                        if (_TextBoxNumeros.Seleccionado)// si _TextBoxNumeros esta seleccionado
                         {
-                            _TextBoxNumeros.AgregarTexto('\b');
+                            _TextBoxNumeros.AgregarTexto('\b');//actualiza el metodo AgregarTexto
                         }
-                        _tiempoAccion--;
+                        _tiempoAccion--;//elimina los numeros 1x1
                     }
                     else
                     {
-                        _tiempoAccion--;
+                        _tiempoAccion--;//elimina los numeros 1x1
                     }
                     return;
                 }
                 if (_TextBoxNumeros.Seleccionado)
-                {
+                {// valida los numeros del teclado (barra numerico) y tambien del teclado numerico (en caso de tener ese teclado)
                     if (((int)keys[0] >= 48 && (int)keys[0] <= 57) || ((int)keys[0] >= 96 && (int)keys[0] <= 105))
                     {
-                        value = keys[0].ToString().Substring(keys[0].ToString().Length - 1);
+                        value = keys[0].ToString().Substring(keys[0].ToString().Length - 1);//captura el ultimo digito ingresado
 
-                        if (EstadoKeyboard.TeclaNoPrecionada(keys[0]))
+                        if (EstadoKeyboard.TeclaNoPrecionada(keys[0]))//esta parte solo verifica que las otras teclas que no han sido precionadas, no aparezcan en el txtbox
                         {
-                            _TextBoxNumeros.AgregarTexto(value.ToCharArray()[0]);
+                            _TextBoxNumeros.AgregarTexto(value.ToCharArray()[0]);//actualiza el txtBox
                         }
                     }
                 }
 
                 if (_TextBoxNumeros.Seleccionado)
                 {
-                    _TextBoxNumeros.AgregarTexto(dato);
+                    _TextBoxNumeros.AgregarTexto(dato);//actualiza el txtBox
                 }
                 datoingresar = value;
 
@@ -399,21 +399,29 @@ namespace TareaEstructura_Grupo5
             return Content.Load<Texture2D>(textureName);
         }
 
-        private void ClickIzquierdo()
+        private void ClickIzquierdo()//evalua si el click izquierdo fue dentro de la posicion del txtbox
         {
-            if (_estadoMouse.X >= _TextBoxNumeros.Posicion.X && _estadoMouse.X <= _TextBoxNumeros.Posicion.X + _TextBoxNumeros.AnchoTextBox)
+            if (_estadoMouse.X >= _TextBoxNumeros.Posicion.X && _estadoMouse.X <= _TextBoxNumeros.Posicion.X + _TextBoxNumeros.AnchoTextBox)//evalua la posicion del click dado en el eje x
             {
-                if (_estadoMouse.Y >= _TextBoxNumeros.Posicion.Y && _estadoMouse.Y <= _TextBoxNumeros.Posicion.Y + _TextBoxNumeros.AltoTextBox)
                 {
-                    _TextBoxNumeros.Seleccionado = true;
+                    if (_estadoMouse.Y >= _TextBoxNumeros.Posicion.Y && _estadoMouse.Y <= _TextBoxNumeros.Posicion.Y + _TextBoxNumeros.AltoTextBox)//evalua la posicion del click dado en el eje y
+                    {
+                        _TextBoxNumeros.Seleccionado = true;
+                    }
                 }
             }
+
+
+
+
+
         }
 
+        //extrae el numero que fue ingresado
         private Keys ExtraerNumero(Keys[] keys)
         {
             foreach (Keys key in keys)
-            {
+            {// como trabaja con ASCII, este toma un numero de 0 a 9 
                 if ((int)key >= 48 && (int)key <= 105)
                 {
                     return key;
@@ -421,8 +429,6 @@ namespace TareaEstructura_Grupo5
             }
             return Keys.None;
         }
-
-
 
     }
 }
