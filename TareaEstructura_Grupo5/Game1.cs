@@ -9,7 +9,15 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
 using System.Text;
-
+using System.Diagnostics;
+using System.Drawing.Imaging;
+using Spire.Doc;
+using Spire.Doc.Documents;
+using Spire.Doc.Fields;
+using Document = Spire.Doc.Document;
+using Section = Spire.Doc.Section;
+using Paragraph = Spire.Doc.Documents.Paragraph;
+using System.Threading;
 
 namespace TareaEstructura_Grupo5
 {
@@ -276,7 +284,11 @@ namespace TareaEstructura_Grupo5
 
             if (opcion3)// PARA EXPORTAR
             {
+                exportarWord(); //Se llama al metodo exportar
 
+                cont++;//aumenta el contador
+
+                opcion3 = false;//vuelve a false para que no ocurran errores
             }
             if (opcion4)
             {
@@ -309,7 +321,52 @@ namespace TareaEstructura_Grupo5
             base.Draw(gameTime);
         }
 
+        //Metodo para exportar la captura de pantalla a Word
+        public void exportarWord()
+        {
+            //Aqui se realiza la captura de pantalla
+            Bitmap bmCaptura = new Bitmap(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
+            Graphics captura = Graphics.FromImage(bmCaptura);
+            captura.CopyFromScreen(System.Windows.Forms.Screen.PrimaryScreen.Bounds.X, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Y, 0, 0, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Size);
 
+            //Aqui se guarda la captura de pantalla y abre el explorador de archivos para guardar
+            //Aqui en esta parte nos daba el siguiente error, System.Threading.ThreadStateException
+            //Entonces por esa razon creamos donde se mostraba la excepcion un subproceso temporal y ejecutamos el codigo dentro
+            Thread t = new Thread((ThreadStart)(() =>
+            {
+                //Segun la investigacion que hicimos acerca de la excepcion vimos que se activaba porque estabamos ejecutando 
+                //el codigo dentro del estado predeterminado del apartamento de CefSharp
+                //y nos aparecia exactamente en la funcion showDialog()
+                System.Windows.Forms.SaveFileDialog guardar = new System.Windows.Forms.SaveFileDialog();
+                if (guardar.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    Bitmap Tomaimagen = new Bitmap(bmCaptura);
+                    Tomaimagen.Save(guardar.FileName, ImageFormat.Jpeg);
+
+                }
+            }));
+            // Ejecuta el código desde un subproceso que se une al subproceso STA
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            t.Join();
+
+            //Para poder crear, insertar y abrir el documento de word usamos la biblioteca Spire.Doc desarrollada por E-iceblue
+            //Tambien intentamos antes usar la biblioteca Interop que es desarrollada por Microsoft pero tuvimos problemas asi que
+            //encontramos la biblioteca Spire y decidimos mejor usar esa
+            //Crea el documento word con Spire.Doc
+            Document document = new Document();
+            Section s = document.AddSection();
+            Paragraph p = s.AddParagraph();
+
+            //Inserta la imagen y el tamaño  
+            DocPicture Pic = p.AppendPicture(Image.FromFile(@"C:\Users\Noelia\Pictures\Saved Pictures\AVL.png"));
+            Pic.Width = 480;
+            Pic.Height = 360;
+
+            //Guarda y lo muestra
+            document.SaveToFile("Image.docx", FileFormat.Docx);
+            System.Diagnostics.Process.Start(new ProcessStartInfo { FileName = @"Image.docx", UseShellExecute = true });
+        }
 
         private void changeButton() // para cambiar los btones
         {

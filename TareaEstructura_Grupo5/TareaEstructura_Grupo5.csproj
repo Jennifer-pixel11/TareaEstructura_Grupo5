@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -15,6 +15,14 @@
     <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Primitives2D" Version="1.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Spire.Doc">
+      <HintPath>..\..\Actualizado tarea de estructura\TareaEstructura_Grupo5 (ACTUALIZADO)\TareaEstructura_Grupo5\bin\Debug\net6.0-windows\Spire.Doc.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.License">
+      <HintPath>..\..\Actualizado tarea de estructura\TareaEstructura_Grupo5 (ACTUALIZADO)\TareaEstructura_Grupo5\bin\Debug\net6.0-windows\Spire.License.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
